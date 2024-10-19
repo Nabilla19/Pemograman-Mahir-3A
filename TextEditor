@@ -1,0 +1,67 @@
+package texteditor;
+
+import java.util.Stack;
+
+public class TextEditor {
+    private String currentText;
+    private final Stack<String> undoStack;
+    private final Stack<String> redoStack;
+
+    public TextEditor() {
+        currentText = "";
+        undoStack = new Stack<>();
+        redoStack = new Stack<>();
+    }
+
+    public void show() {
+        System.out.println("Current Text: " + currentText);
+    }
+
+    public void write(String newText) {
+
+        undoStack.push(currentText);
+        redoStack.clear();  
+        currentText += newText;
+        System.out.println("Added text: " + newText);
+    }
+
+    public void undo() {
+        if (!undoStack.isEmpty()) {
+            redoStack.push(currentText);  
+            currentText = undoStack.pop(); 
+            System.out.println("Undo performed.");
+        } else {
+            System.out.println("Nothing to undo.");
+        }
+    }
+
+    public void redo() {
+        if (!redoStack.isEmpty()) {
+            undoStack.push(currentText);  
+            currentText = redoStack.pop();  
+            System.out.println("Redo performed.");
+        } else {
+            System.out.println("Nothing to redo.");
+        }
+    }
+
+    public static void main(String[] args) {
+        TextEditor editor = new TextEditor();
+
+        editor.write("Hello");
+        editor.show();
+
+        editor.write(", World!");
+        editor.show();
+
+        editor.undo();
+        editor.show();
+
+        editor.redo();
+        editor.show();
+
+        editor.undo();
+        editor.write(", Java!");
+        editor.show();
+    }
+}
